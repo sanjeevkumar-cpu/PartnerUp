@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,8 +24,13 @@ const ApplicationsDialog = ({ projectId, projectTitle }: ApplicationsDialogProps
   const { data: applications = [], isLoading } = useProjectApplications(projectId);
   const updateStatus = useUpdateApplicationStatus();
 
-  const handleStatusUpdate = async (applicationId: string, status: string) => {
-    await updateStatus.mutateAsync({ applicationId, status });
+  const handleStatusUpdate = async (applicationId: string, status: string, applicantName: string) => {
+    await updateStatus.mutateAsync({ 
+      applicationId, 
+      status,
+      projectTitle,
+      applicantName
+    });
   };
 
   const getStatusColor = (status: string) => {
@@ -135,7 +139,7 @@ const ApplicationsDialog = ({ projectId, projectTitle }: ApplicationsDialogProps
                     <div className="flex gap-2 pt-2">
                       <Button
                         size="sm"
-                        onClick={() => handleStatusUpdate(application.id, 'accepted')}
+                        onClick={() => handleStatusUpdate(application.id, 'accepted', application.profiles.full_name)}
                         disabled={updateStatus.isPending}
                       >
                         <CheckCircle className="h-4 w-4 mr-1" />
@@ -144,7 +148,7 @@ const ApplicationsDialog = ({ projectId, projectTitle }: ApplicationsDialogProps
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => handleStatusUpdate(application.id, 'rejected')}
+                        onClick={() => handleStatusUpdate(application.id, 'rejected', application.profiles.full_name)}
                         disabled={updateStatus.isPending}
                       >
                         <XCircle className="h-4 w-4 mr-1" />

@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -143,6 +142,45 @@ export const useCreateProject = () => {
         variant: "destructive",
       });
       console.error('Create project error:', error);
+    },
+  });
+};
+
+export const useDeleteProject = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      // First delete all applications for this project
+      await supabase
+        .from('project_applications')
+        .delete()
+        .eq('project_id', projectId);
+
+      // Then delete the project
+      const { error } = await supabase
+        .from('projects')
+        .delete()
+        .eq('id', projectId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['my-projects'] });
+      toast({
+        title: "Project Deleted",
+        description: "Your project has been deleted successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete project. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Delete project error:', error);
     },
   });
 };

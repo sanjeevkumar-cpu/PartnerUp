@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { Search, Filter, LogOut, User, FolderOpen, Plus } from "lucide-react";
 import CreateProjectDialog from "@/components/CreateProjectDialog";
 import RealProjectCard from "@/components/RealProjectCard";
 import ProfileDialog from "@/components/ProfileDialog";
+import NotificationBell from "@/components/NotificationBell";
 import { useAuth } from "@/hooks/useAuth";
 import { useProjects } from "@/hooks/useProjects";
 import { useProfile } from "@/hooks/useProfile";
@@ -192,6 +192,7 @@ const Index = () => {
                 <FolderOpen className="h-4 w-4 mr-2" />
                 My Projects
               </Button>
+              <NotificationBell />
               <ProfileDialog />
               <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-full">
                 <User className="h-4 w-4" />
@@ -206,6 +207,7 @@ const Index = () => {
         </div>
       </header>
       
+      {/* Main content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">

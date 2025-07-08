@@ -1,26 +1,44 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { useMyProjects } from '@/hooks/useProjects';
-import { Clock, Users, User, ArrowLeft } from 'lucide-react';
+import { useMyProjects, useDeleteProject } from '@/hooks/useProjects';
+import { Clock, Users, User, ArrowLeft, Trash2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ApplicationsDialog from '@/components/ApplicationsDialog';
 import CreateProjectDialog from '@/components/CreateProjectDialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import NotificationBell from '@/components/NotificationBell';
 
 const MyProjects = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { data: projects = [], isLoading } = useMyProjects();
+  const deleteProject = useDeleteProject();
+  const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
       navigate('/auth');
     }
   }, [user, navigate]);
+
+  const handleDeleteProject = async (projectId: string) => {
+    await deleteProject.mutateAsync(projectId);
+    setProjectToDelete(null);
+  };
 
   if (!user) {
     return null;
@@ -38,7 +56,10 @@ const MyProjects = () => {
               </Button>
               <h1 className="text-2xl font-bold text-blue-600">My Projects</h1>
             </div>
-            <CreateProjectDialog />
+            <div className="flex items-center gap-2">
+              <NotificationBell />
+              <CreateProjectDialog />
+            </div>
           </div>
         </div>
       </header>
@@ -64,7 +85,33 @@ const MyProjects = () => {
             {projects.map((project) => (
               <Card key={project.id} className="h-full hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <CardTitle className="text-lg">{project.title}</CardTitle>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg">{project.title}</CardTitle>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Project</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete "{project.title}"? This action cannot be undone and will also delete all applications for this project.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteProject(project.id)}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <div className="flex items-center gap-1">
                       <User className="h-4 w-4" />

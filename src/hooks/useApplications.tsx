@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -132,22 +131,56 @@ export const useMyApplications = () => {
 
 export const useUpdateApplicationStatus = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({ applicationId, status }: { applicationId: string; status: string }) => {
+    mutationFn: async ({ applicationId, status, projectTitle, applicantName }: { 
+      applicationId: string; 
+      status: string;
+      projectTitle?: string;
+      applicantName?: string;
+    }) => {
       const { data, error } = await supabase
         .from('project_applications')
         .update({ status })
         .eq('id', applicationId)
-        .select()
+        .select(`
+          *,
+          profiles (full_name),
+          projects (title, owner_id)
+        `)
         .single();
 
       if (error) throw error;
+
+      // Create notification for the applicant
+      if (data && user) {
+        const notificationTitle = status === 'accepted' 
+          ? 'Application Accepted!' 
+          : 'Application Update';
+        
+        const notificationMessage = status === 'accepted'
+          ? `Your application for "${data.projects?.title}" has been accepted!`
+          : `Your application for "${data.projects?.title}" has been ${status}.`;
+
+        await supabase
+          .from('notifications')
+          .insert([
+            {
+              user_id: data.applicant_id,
+              title: notificationTitle,
+              message: notificationMessage,
+              type: 'application_status'
+            }
+          ]);
+      }
+
       return data;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['project-applications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
       toast({
         title: "Application Updated",
         description: `Application ${variables.status}.`,
