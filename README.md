@@ -161,14 +161,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Mobile app development
 - Integration with version control systems
 
-## 👥 Team
+## 👥 Developer
 
-- **Your Name** - Full Stack Developer
+- **Sanjeev Kumar** - Full Stack Developer
 
 ## 📞 Contact
 
-- **Email**: your.email@example.com
-- **LinkedIn**: your-linkedin-profile
+- **LinkedIn**: [your-linkedin-profile](https://www.linkedin.com/in/SanjeevKumar2003/)
 - **GitHub**: your-github-username
 
 ## 🙏 Acknowledgments
