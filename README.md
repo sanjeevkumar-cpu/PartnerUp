@@ -140,14 +140,6 @@ VITE_SUPABASE_URL=your_production_supabase_url
 VITE_SUPABASE_ANON_KEY=your_production_supabase_anon_key
 ```
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -167,8 +159,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **LinkedIn**: [your-linkedin-profile](https://www.linkedin.com/in/SanjeevKumar2003/)
-- **GitHub**: your-github-username
+- **LinkedIn**: [LinkiedIn](https://www.linkedin.com/in/SanjeevKumar2003/)
 
 ## 🙏 Acknowledgments
 
@@ -178,5 +169,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Lucide](https://lucide.dev) for the icon library
 
 ---
-
-**Built with ❤️ using modern web technologies**
